@@ -32,26 +32,24 @@ implementation
 { THttpResponse }
 
 function ReturnHttpResponse(http: TIdHttp; response : string = '') : THttpResponse;
-var
-  objHttp : THttpResponse;
 begin
-    objHttp := THttpResponse.Create( http, response );
-    Result := objHttp;
+  Result := THttpResponse.Create( http, response );
 end;
 
 function ReturnHttpResponse(http: TIdHttp;
                             URL: string;
                             textToSend: TStringList) : THttpResponse; overload;
 var
-  objHttp : THttpResponse;
   response: AnsiString;
 begin
   try
     response := http.Post(URL, textToSend);
-    objHttp := THttpResponse.Create( http, response );
   except
-    on E: Exception do;
+    on E: EIdHTTPProtocolException do
+      response := E.ErrorMessage;
   end;
+
+  Result := THttpResponse.Create( http, response );
 end;
 
 function ReturnHttpResponse(http: TIdHttp;

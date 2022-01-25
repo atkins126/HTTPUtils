@@ -164,8 +164,6 @@ end;
 
 function DeleteHttp( options: THttpOptions ) : THttpResponse;
 var
-  url: string;
-  JsonToSend: TStringStream;
   httpUt : THttpUtils;
 begin
   Result := nil;
@@ -173,9 +171,9 @@ begin
   if not DModCem.INetAtivo or not CheckINetConnection then
     Exit;
 
+  httpUt := THttpUtils.Create;
   try
     try
-      httpUt := THttpUtils.Create;
       httpUt.token := options.token;
       httpUt.gravaDadosLog := options.gravaDadosLog;
       httpUt.encodeUrl := options.encodeUrl;
@@ -217,11 +215,6 @@ begin
 
   Result := httpOpt;
 end;
-
-{procedure THttpOptions.AddCrypt( enabled : Boolean = True );
-begin
-  needCript := enabled;
-end;}
 
 procedure THttpOptions.AddPayload( enabled : Boolean = True;
                                    customPayload : AnsiString = 'payload=' );
@@ -270,6 +263,8 @@ end;
 
 function THttpUtils.DeleteObj( resource : AnsiString;
                                streamToSend : TStringStream  ): THttpResponse;
+const
+  methodName = 'DeleteObj'; 
 begin
   Result := nil;
 
@@ -290,15 +285,17 @@ begin
       end;
     except
       on E: EIdHTTPProtocolException do
-        GravaLog( E.ErrorMessage, 'DeleteObj', resource, '' );
+        GravaLog( E.ErrorMessage, methodName, resource, '' );
       on E: Exception do
-        GravaLog( E.Message, 'DeleteObj', resource, '' );
+        GravaLog( E.Message, methodName, resource, '' );
     end;
   finally
   end;
 end;
 
 function THttpUtils.GetObj( urlResource : AnsiString ): THttpResponse;
+const
+  methodName = 'GetObj';
 begin
   Result := nil;
 
@@ -314,7 +311,7 @@ begin
       end;
     except
       on E: Exception do
-        GravaLog( E.Message, 'GetObj', urlResource, '' );
+        GravaLog( E.Message, methodName, urlResource, '' );
     end;
   finally
     IdHTTP1.Free;
@@ -335,7 +332,7 @@ begin
                      'endpoint: %s' + #13 +
                      'JSON/XML: %s ' + #13 +
                      'Http Code: %d' + #13 +
-                     'Http Response: %s',
+                     'Http Response: %s' + #13,
                      [FormatDateTime('c', Now ), erro, acao, urlResource, xmlJsonText, IdHTTP1.ResponseCode, IdHTTP1.ResponseText] );
 
   try
@@ -355,6 +352,8 @@ end;
 
 function THttpUtils.PostObj( urlResource,
                              xmlJsonText : AnsiString ): THttpResponse;
+const
+  methodName = 'PostObj';
 var
   TextToSend : TStringList;
   StreamToSend: TStringStream;
@@ -374,7 +373,7 @@ begin
           xmlJsonText := xmlJsonText + ']';
         end;
 
-        if addPayload then
+         if addPayload then
           xmlJsonText := payload + xmlJsonText;
 
         TextToSend := TStringList.Create;
@@ -382,19 +381,17 @@ begin
 
         if contentType = tpJson then begin
           StreamToSend := TStringStream.Create( xmlJsonText, TEncoding.UTF8 );
-          Result := ReturnHttpResponse( IdHTTP1, IdHTTP1.Post( urlResource, StreamToSend ));
+          Result := ReturnHttpResponse( IdHTTP1, urlResource, StreamToSend );
         end
         else
           Result := ReturnHttpResponse( IdHTTP1, IdHTTP1.Post( urlResource, TextToSend ) );
-
-        GravaLog( Result.ResponseText , 'PostObj', urlResource, xmlJsonText );
       end;
 
     except
       on E: EIdHTTPProtocolException do
-        GravaLog( E.ErrorMessage, 'PostObj', urlResource, xmlJsonText );
+        GravaLog( E.ErrorMessage, methodName, urlResource, xmlJsonText );
       on E: Exception do
-        GravaLog( E.Message, 'PostObj', urlResource, xmlJsonText );
+        GravaLog( E.Message, methodName, urlResource, xmlJsonText );
     end;
   finally
     StreamToSend.Free;
@@ -405,10 +402,10 @@ end;
 
 function THttpUtils.PutObj( urlResource: string;
   streamToSend: TStringStream ): THttpResponse;
+const
+  methodName = 'PutObj';
 begin
   IdHTTP1.IOHandler := IdSSLIOHandlerSocketOpenSSL1;
-  IdHTTP1.Request.UserAgent := 'Mozilla/5.0 (Windows NT 10.0;Win64;x64) AppleWebKit/537.36 (KHTML,like Gecko) Chrome/58.0.3029.96 Safari/537.36';
-  IdHttp1.Request.Accept := '*/*';
   IdSSLIOHandlerSocketOpenSSL1.SSLOptions.Mode := sslmClient;
   IdSSLIOHandlerSocketOpenSSL1.SSLOptions.Method := sslvTLSv1_2;
   Result := nil;
@@ -421,9 +418,9 @@ begin
       end;
     except
       on E: EIdHTTPProtocolException do
-        GravaLog( E.ErrorMessage, 'PutObj', urlResource, '' );
+        GravaLog( E.ErrorMessage, methodName, urlResource, '' );
       on E: Exception do
-        GravaLog( E.Message, 'PostObj', urlResource, '' );
+        GravaLog( E.Message, methodName, urlResource, '' );
     end;
   finally
     IdHTTP1.Free;
