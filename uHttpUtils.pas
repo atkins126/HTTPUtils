@@ -71,7 +71,8 @@ var
   httpUt : THttpUtils;
 begin
   httpUt := nil;
-  Result := nil;
+  //Result := nil;
+  Result := THttpResponse.Create;
 
   if not DModCem.INetAtivo or not CheckINetConnection then
     Exit;

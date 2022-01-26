@@ -11,7 +11,7 @@ interface
       FResponseContent: string;
 
     public
-      constructor Create(http : TIdHttp; response : string = '');
+      constructor Create(http : TIdHttp = nil; response : string = '');
       property ResponseCode : integer read FResponseCode write FResponseCode;
       property ResponseText : string read FResponseText write FResponseText;
       property ResponseContent : string read FResponseContent write FResponseContent;
@@ -68,11 +68,15 @@ begin
   Result := THttpResponse.Create( http, response );
 end;
 
-constructor THttpResponse.Create(http: TIdHttp; response : string = '');
+constructor THttpResponse.Create(http : TIdHttp = nil; response : string = '');
 begin
   inherited Create;
-  ResponseCode := http.ResponseCode;
-  ResponseText := http.Response.ResponseText;
+
+  if http <> nil then begin
+    ResponseCode := http.ResponseCode;
+    ResponseText := http.Response.ResponseText;
+  end;
+
   ResponseContent := response;
 end;
 
