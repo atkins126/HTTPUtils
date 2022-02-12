@@ -3,9 +3,9 @@ unit uHttpUtils;
 interface
 uses
   IdHTTP, System.IOUtils , System.Types, System.SysConst, System.Diagnostics,
-  System.Classes, uHttpResponse, DMCem, uNetwork_Info, IdIOHandler,
+  System.Classes, uHttpResponse, IdIOHandler,
   IdIOHandlerSocket, IdIOHandlerStack, IdSSL, IdSSLOpenSSL, System.JSON,
-  System.SysUtils, IdMultipartFormData, IdURI;
+  System.SysUtils, IdMultipartFormData, IdURI, IdTCPClient;
 
   type TTipoEnvio = (tpJson, tpUrlEncoded, tpRaw);
   type TIdHTTPAccess = class(TIdHTTP);
@@ -61,7 +61,9 @@ uses
   function PutHttpObj( options: THttpOptions  ) : THttpResponse;
   function DeleteHttp( options: THttpOptions ) : THttpResponse;
   function FaktoryHttpOptions( tipo : TTipoEnvio ): THttpOptions;
-
+  
+  function HaveInternetConnection: boolean;
+  
 implementation
 
 { THttpUtils }
@@ -71,11 +73,9 @@ var
   httpUt : THttpUtils;
 begin
   httpUt := nil;
-  //Result := nil;
   Result := THttpResponse.Create;
 
-  if not DModCem.INetAtivo or not CheckINetConnection then
-    Exit;
+  if not HaveInternetConnection then exit;
 
   try
     try
@@ -108,8 +108,7 @@ begin
   httpUt := nil;
   Result := nil;
 
-  if not DModCem.INetAtivo or not CheckINetConnection then
-    Exit;
+  if not HaveInternetConnection then Exit;
 
   try
     try
@@ -137,8 +136,7 @@ begin
   httpUt := nil;
   Result := nil;
 
-  if not DModCem.INetAtivo or not CheckINetConnection then
-    Exit;
+  if not HaveInternetConnection then exit;
 
   try
     try
@@ -169,7 +167,7 @@ var
 begin
   Result := nil;
 
-  if not DModCem.INetAtivo or not CheckINetConnection then
+  if not HaveInternetConnection then
     Exit;
 
   httpUt := THttpUtils.Create;
@@ -208,13 +206,33 @@ begin
       httpOpt.AddPayload;
       httpOpt.SetEncodedUrl;
     end;
-    tpRaw : begin
+    tpRaw,tpJson : begin
       httpOpt.AddPayload( false );
       httpOpt.SetEncodedUrl( false );
     end;
   end;
 
   Result := httpOpt;
+end;
+
+function HaveInternetConnection: boolean;
+var
+  IdTCPClient1: TIdTCPClient;
+begin
+  Result := false;  
+  IdTCPClient1 := TIdTCPClient.Create;
+  try
+    IdTCPClient1.ReadTimeout := 2000;
+    IdTCPClient1.ConnectTimeout := 2000;
+    IdTCPClient1.Port := 80;
+    IdTCPClient1.Host := 'google.com';
+    IdTCPClient1.Connect;
+    IdTCPClient1.Disconnect;
+    Result := true;
+  except
+    on Exception do;
+  end;
+  IdTCPClient1.Free;
 end;
 
 procedure THttpOptions.AddPayload( enabled : Boolean = True;
@@ -269,7 +287,7 @@ const
 begin
   Result := nil;
 
-  if not DModCem.INetAtivo or not CheckINetConnection then
+  if not HaveInternetConnection then
     Exit;
 
   try
@@ -300,7 +318,7 @@ const
 begin
   Result := nil;
 
-  if not DModCem.INetAtivo or not CheckINetConnection then
+  if not HaveInternetConnection then
     Exit;
 
   try
