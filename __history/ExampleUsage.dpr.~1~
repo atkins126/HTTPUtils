@@ -2,9 +2,7 @@ program ExampleUsage;
 
 uses
   Vcl.Forms,
-  frmMainUse in 'frmMainUse.pas' {Form1},
-  uHttpResponse in 'uHttpResponse.pas',
-  uHttpUtils in 'uHttpUtils.pas';
+  frmMainUse in 'frmMainUse.pas' {Form1};
 
 {$R *.res}
 

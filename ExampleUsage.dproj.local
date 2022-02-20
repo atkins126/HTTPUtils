@@ -5,5 +5,7 @@
     <Transaction>2022/02/12 17:37:25.711,C:\Users\Renan\EG\Projects\HTTPUtils\frmMainUse.pas=C:\Users\Renan\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
     <Transaction>2022/02/12 17:37:25.711,C:\Users\Renan\EG\Projects\HTTPUtils\frmMainUse.dfm=C:\Users\Renan\Documents\Embarcadero\Studio\Projects\Unit1.dfm</Transaction>
     <Transaction>2022/02/12 17:37:57.456,C:\Users\Renan\EG\Projects\HTTPUtils\ExampleUsage.dproj=C:\Users\Renan\Documents\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
+    <Transaction>2022/02/12 17:40:59.058,=C:\Users\Renan\EG\Projects\HTTPUtils\uHttpResponse.pas</Transaction>
+    <Transaction>2022/02/12 17:40:59.089,=C:\Users\Renan\EG\Projects\HTTPUtils\uHttpUtils.pas</Transaction>
   </Transactions>
 </BorlandProject>

@@ -3,9 +3,9 @@ unit uHttpUtils;
 interface
 uses
   IdHTTP, System.IOUtils , System.Types, System.SysConst, System.Diagnostics,
-  System.Classes, uHttpResponse, IdIOHandler,
+  System.Classes, uHttpResponse, DMCem, uNetwork_Info, IdIOHandler,
   IdIOHandlerSocket, IdIOHandlerStack, IdSSL, IdSSLOpenSSL, System.JSON,
-  System.SysUtils, IdMultipartFormData, IdURI, IdTCPClient;
+  System.SysUtils, IdMultipartFormData, IdURI;
 
   type TTipoEnvio = (tpJson, tpUrlEncoded, tpRaw);
   type TIdHTTPAccess = class(TIdHTTP);

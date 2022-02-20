@@ -3,8 +3,8 @@ Tool for http requests (GET, POST, PUT, DELETE) for Delphi, simplifying Indy use
 
 Usage: 
 
--In the project, add the files uHttpResponse.pas, uHttpUtils.pas and uNetwork_Info.pas; 
--In the desired unit, add the uses uHttpResponse, uHttpUtils and uNetwork_Info;
+-In the project, add the files uHttpResponse.pas, uHttpUtils.pas; 
+-In the desired unit, add the uses uHttpResponse, uHttpUtils;
 -Now, create the objects:
 
   http : THttpOptions;
@@ -25,7 +25,8 @@ Methods:
   This method return a THttpOptions object, according the wanted type passed in param 'tipo'. Options avaliable:
   
   -tpUrlEncoded: brings by default the options AddPayload and encode the defined URL;
-  -tpRaw : brings by default the options AddPayload and encode the defined URL to false.
+  -tpRaw : brings by default the options AddPayload and encode the defined URL to false;
+  -tpJson: set off both payload and encode URL;
       
 
 Object THttpUtils;
