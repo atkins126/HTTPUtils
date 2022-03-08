@@ -40,7 +40,7 @@ function ReturnHttpResponse(http: TIdHttp;
                             URL: string;
                             textToSend: TStringList) : THttpResponse; overload;
 var
-  response: AnsiString;
+  response: string;
 begin
   try
     response := http.Post(URL, textToSend);
@@ -56,7 +56,7 @@ function ReturnHttpResponse(http: TIdHttp;
                             URL: string;
                             streamToSend: TStringStream) : THttpResponse; overload;
 var
-  response: AnsiString;
+  response: string;
 begin
   try
     response := http.Post(URL, streamToSend);
