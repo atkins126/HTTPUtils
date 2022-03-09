@@ -3,9 +3,9 @@ unit uHttpUtils;
 interface
 uses
   IdHTTP, System.IOUtils , System.Types, System.SysConst, System.Diagnostics,
-  System.Classes, uHttpResponse, DMCem, uNetwork_Info, IdIOHandler,
+  System.Classes, uHttpResponse, IdIOHandler,
   IdIOHandlerSocket, IdIOHandlerStack, IdSSL, IdSSLOpenSSL, System.JSON,
-  System.SysUtils, IdMultipartFormData, IdURI;
+  System.SysUtils, IdMultipartFormData, IdURI,  IdTCPClient;
 
   type TTipoEnvio = (tpJson, tpUrlEncoded, tpRaw);
   type TIdHTTPAccess = class(TIdHTTP);
@@ -14,7 +14,7 @@ uses
       token,
       urlResource,
       xmlJsonToSend,
-      payload : AnsiString;
+      payload : string;
       gravaDadosLog,
       isListObjectJson,
       needPayload,
@@ -22,11 +22,11 @@ uses
       contentType : TTipoEnvio;
     public
       procedure ContentIsObjJson( enabled : Boolean = True ) ;
-      procedure SetToken( security_token: AnsiString );
-      procedure SetUrlResource( url: AnsiString );
-      procedure SetContentToSend( contentToSend: AnsiString );
+      procedure SetToken( security_token: string );
+      procedure SetUrlResource( url: string );
+      procedure SetContentToSend( contentToSend: string );
       procedure AddPayload( enabled : Boolean = True;
-                            customPayload : AnsiString = 'payload=' );
+                            customPayload : string = 'payload=' );
       procedure SetEncodedUrl( enabled : Boolean = true );
   end;
   type THttpUtils = class
@@ -38,16 +38,16 @@ uses
       gravaDadosLog,
       encodeUrl : boolean;
       token,
-      payload : AnsiString;
+      payload : string;
       contentType : TTipoEnvio;
 
       procedure GravaLog( erro, acao, urlResource, xmlJsonText: string );
       function  PostObj( urlResource,
-                         xmlJsonText : AnsiString ): THttpResponse;
-      function GetObj( urlResource : AnsiString ) : THttpResponse;
+                         xmlJsonText : string ): THttpResponse;
+      function GetObj( urlResource : string ) : THttpResponse;
       function PutObj( urlResource : string;
                        streamToSend : TStringStream ): THttpResponse;
-      function DeleteObj( resource : AnsiString;
+      function DeleteObj( resource : string;
                           streamToSend : TStringStream ): THttpResponse;
       procedure SetToken;
       procedure SetContentType;
@@ -236,7 +236,7 @@ begin
 end;
 
 procedure THttpOptions.AddPayload( enabled : Boolean = True;
-                                   customPayload : AnsiString = 'payload=' );
+                                   customPayload : string = 'payload=' );
 begin
   needPayload := enabled;
   payload := customPayload;
@@ -247,7 +247,7 @@ begin
   isListObjectJson := enabled;
 end;
 
-procedure THttpOptions.SetContentToSend(contentToSend: AnsiString);
+procedure THttpOptions.SetContentToSend(contentToSend: string);
 begin
   xmlJsonToSend := contentToSend;
 end;
@@ -257,12 +257,12 @@ begin
   encodeUrl := enabled;
 end;
 
-procedure THttpOptions.SetToken(security_token: AnsiString);
+procedure THttpOptions.SetToken(security_token: string);
 begin
   token := security_token;
 end;
 
-procedure THttpOptions.SetUrlResource(url: AnsiString);
+procedure THttpOptions.SetUrlResource(url: string);
 begin
   urlResource := url;
 end;
@@ -280,7 +280,7 @@ begin
    IdHTTP1.HTTPOptions := IdHttp1.HTTPOptions - [hoForceEncodeParams];
 end;
 
-function THttpUtils.DeleteObj( resource : AnsiString;
+function THttpUtils.DeleteObj( resource : string;
                                streamToSend : TStringStream  ): THttpResponse;
 const
   methodName = 'DeleteObj'; 
@@ -312,7 +312,7 @@ begin
   end;
 end;
 
-function THttpUtils.GetObj( urlResource : AnsiString ): THttpResponse;
+function THttpUtils.GetObj( urlResource : string ): THttpResponse;
 const
   methodName = 'GetObj';
 begin
@@ -340,7 +340,7 @@ end;
 procedure THttpUtils.GravaLog( erro, acao, urlResource, xmlJsonText: string );
 var
   arq: TextFile;
-  msgErro : AnsiString;
+  msgErro : string;
 begin
 
   if not gravaDadosLog then Exit;
@@ -370,7 +370,7 @@ begin
 end;
 
 function THttpUtils.PostObj( urlResource,
-                             xmlJsonText : AnsiString ): THttpResponse;
+                             xmlJsonText : string ): THttpResponse;
 const
   methodName = 'PostObj';
 var

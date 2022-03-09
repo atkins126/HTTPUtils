@@ -53,7 +53,7 @@ end;
 
 procedure TForm1.btnPostClick(Sender: TObject);
 var
-  json: AnsiString;
+  json: string;
 begin
   json := '{"title": "foo",' +
           '"body": "bar",' +
@@ -67,7 +67,7 @@ end;
 
 procedure TForm1.btnPutClick(Sender: TObject);
 var
-  json: AnsiString;
+  json: string;
 begin
   json := '{"id":1,' +
           '"title": "foo",' +
